@@ -1,5 +1,6 @@
 package Interface;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface SimpleCollection<T> {
@@ -9,15 +10,15 @@ public interface SimpleCollection<T> {
 
     boolean contains(T o);
 
-    T[] toArray();
+    ArrayList<T> toArray();
 
     boolean add(T t);
 
     boolean remove(T o);
 
-    boolean addAll(Collection<T> c);
+    void addAll(Collection<T> c);
 
-    boolean removeAll(Collection<T> c);
+    void removeAll(Collection<T> c);
 
     void clear();
 }

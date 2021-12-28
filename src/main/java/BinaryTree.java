@@ -1,5 +1,6 @@
 import Interface.SimpleCollection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -13,32 +14,7 @@ public class BinaryTree<T> implements SimpleCollection<T> {
 
     @Override
     public int size() {
-
-        if(root == null){
-            return 0;
-        }
-        int size = 0;
-
-        Stack<Node<T>> nodeStack = new Stack<>();
-        nodeStack.push(root);
-
-        while(!nodeStack.empty()){
-
-            Node<T> parElement =  nodeStack.pop();
-
-            size++;
-            if (parElement.getRightChild() != null){
-
-                nodeStack.push(parElement.getRightChild());
-
-            }
-            if (parElement.getLeftChild() != null){
-
-                nodeStack.push(parElement.getLeftChild());
-
-            }
-        }
-        return size;
+        return toArray().size();
     }
 
     @Override
@@ -74,9 +50,33 @@ public class BinaryTree<T> implements SimpleCollection<T> {
 
 
     @Override
-    public T[] toArray() {
+    public ArrayList<T> toArray() {
 
-        return null;
+        ArrayList<T> valueList = new ArrayList<>();
+        if(root == null){
+            return valueList;
+        }
+
+        Stack<Node<T>> nodeStack = new Stack<>();
+        nodeStack.push(root);
+
+        while(!nodeStack.empty()){
+
+            Node<T> parElement =  nodeStack.pop();
+
+            valueList.add(parElement.getValue());
+            if (parElement.getRightChild() != null){
+
+                nodeStack.push(parElement.getRightChild());
+
+            }
+            if (parElement.getLeftChild() != null){
+
+                nodeStack.push(parElement.getLeftChild());
+
+            }
+        }
+        return valueList;
     }
 
     @Override
@@ -133,7 +133,7 @@ public class BinaryTree<T> implements SimpleCollection<T> {
 
         else if(curNode.getKey() == hashKey){
             root = null;
-            System.out.printf("element %s is already deleted\n", o);
+            System.out.printf("element %s is deleted\n", o);
             return true;
         }
 
@@ -155,27 +155,27 @@ public class BinaryTree<T> implements SimpleCollection<T> {
 
                 if (curNode == parNode.getLeftChild()) {
                     parNode.setLeftChild(null);
-                    System.out.printf("element %s deleted\n", o);
+                    System.out.printf("element %s is deleted\n", o);
                     return true;
                 } else if (curNode == parNode.getRightChild()) {
                     parNode.setRightChild(null);
-                    System.out.printf("element %s deleted\n", o);
+                    System.out.printf("element %s is deleted\n", o);
                     return true;
                 }
             }
              if (curNode.getLeftChild() == null & curNode.getRightChild() != null){
                  parNode.setRightChild(curNode.getRightChild());
-                 System.out.printf("element %s deleted\n", o);
+                 System.out.printf("element %s is deleted\n", o);
                  return true;
             }
              else if (curNode.getRightChild() == null & curNode.getLeftChild() != null){
                  parNode.setLeftChild(curNode.getLeftChild());
-                 System.out.printf("element %s deleted\n", o);
+                 System.out.printf("element %s is deleted\n", o);
                  return true;
              }
              if (curNode.getRightChild() != null & curNode.getLeftChild() != null){
                  if (getCurrentNode(curNode)){
-                     System.out.printf("element %s deleted\n", o);
+                     System.out.printf("element %s is deleted\n", o);
                  }
                  else {
 
@@ -189,13 +189,17 @@ public class BinaryTree<T> implements SimpleCollection<T> {
 
 
     @Override
-    public boolean addAll(Collection c) {
-        return false;
+    public void addAll(Collection<T> c) {
+        for (T element : c) {
+            add(element);
+        }
     }
 
     @Override
-    public boolean removeAll(Collection c) {
-        return false;
+    public void removeAll(Collection<T> c) {
+        for (T element : c) {
+            remove(element);
+        }
     }
 
     @Override
@@ -223,4 +227,3 @@ public class BinaryTree<T> implements SimpleCollection<T> {
     }
 
 }
-// TODO: 12/28/21 add methods "removeAll", "addAll", "toArray"
