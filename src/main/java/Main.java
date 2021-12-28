@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
         BinaryTree<Integer> binaryTree = new BinaryTree<>();
 //        ArrayList<Integer> arrayList = new ArrayList<>();
 //        arrayList.add(7);
@@ -30,5 +31,8 @@ public class Main {
 //        System.out.printf("size of binary tree is %s\n",binaryTree.size());
 //        binaryTree.remove(3);
 //        binaryTree.isEmpty();
+        System.out.printf("time of compiling is %s\n", System.currentTimeMillis() - startTime);
+        System.out.printf("difficult of algorithm is %s", Math.log(binaryTree.size()));
+
     }
 }
