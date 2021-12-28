@@ -3,9 +3,9 @@ import Interface.SimpleCollection;
 import java.util.Collection;
 import java.util.Stack;
 
-public class BinaryTree implements SimpleCollection {
+public class BinaryTree<T> implements SimpleCollection<T> {
 
-    private Node root;
+    private Node<T> root;
 
     public  BinaryTree(){
         root = null;
@@ -13,8 +13,32 @@ public class BinaryTree implements SimpleCollection {
 
     @Override
     public int size() {
-        printTree();
-        return 0;
+
+        if(root == null){
+            return 0;
+        }
+        int size = 0;
+
+        Stack<Node<T>> nodeStack = new Stack<>();
+        nodeStack.push(root);
+
+        while(!nodeStack.empty()){
+
+            Node<T> parElement =  nodeStack.pop();
+
+            size++;
+            if (parElement.getRightChild() != null){
+
+                nodeStack.push(parElement.getRightChild());
+
+            }
+            if (parElement.getLeftChild() != null){
+
+                nodeStack.push(parElement.getLeftChild());
+
+            }
+        }
+        return size;
     }
 
     @Override
@@ -30,7 +54,7 @@ public class BinaryTree implements SimpleCollection {
 
     @Override
     public boolean contains(Object o) {
-        Node curNode = root;
+        Node<T> curNode = root;
         int hash_value = o.hashCode();
         while (curNode.getKey() != hash_value){
             if (hash_value > curNode.getKey()){
@@ -50,15 +74,16 @@ public class BinaryTree implements SimpleCollection {
 
 
     @Override
-    public Object[] toArray() {
-        return new Object[0];
+    public T[] toArray() {
+
+        return null;
     }
 
     @Override
-    public boolean add(Object o) {
-        Node curNode = root;
+    public boolean add(T o) {
+        Node<T> curNode = root;
         int hash_code = o.hashCode();
-        Node<Object> newNode = new Node<>();
+        Node<T> newNode = new Node<>();
         newNode.setKey(hash_code);
         newNode.setValue(o);
         if (curNode == null){
@@ -68,20 +93,24 @@ public class BinaryTree implements SimpleCollection {
         }else {
             while (true) {
                 if (newNode.getKey() < curNode.getKey()) {
-
                     if (curNode.getLeftChild() == null) {
                         curNode.setLeftChild(newNode);
                         System.out.printf("%s added in %s\n", newNode.getValue(), curNode.getValue());
                         return true;
+                    }else{
+                        curNode = curNode.getLeftChild();
                     }
                 }
+
                     else if (newNode.getKey() > curNode.getKey()){
                         if(curNode.getRightChild() == null){
                             curNode.setRightChild(newNode);
                             System.out.printf("%s added in %s\n",newNode.getValue(), curNode.getValue());
                             return true;
-                    }
-                }else if( newNode.getKey() == curNode.getKey()){
+                        }else {
+                            curNode = curNode.getRightChild();
+                        }
+                        }else if( newNode.getKey() == curNode.getKey()){
                         System.out.printf("%s is already in %s\n",newNode,curNode.getValue());
                         return false;
                 }
@@ -94,8 +123,8 @@ public class BinaryTree implements SimpleCollection {
     public boolean remove(Object o) {
 
         int hashKey = o.hashCode();
-        Node curNode = root;
-        Node parNode = root;
+        Node<T> curNode = root;
+        Node<T> parNode = root;
 
         if (curNode == null){
             System.out.println("Binary tree is empty\n");
@@ -171,61 +200,27 @@ public class BinaryTree implements SimpleCollection {
 
     @Override
     public void clear() {
-
+        root = null;
     }
 
-    private boolean getCurrentNode(Node node){
+    private boolean getCurrentNode(Node<T> node){
 
-        Node curNode = node.getRightChild();
-        Node parNode = curNode;
+        Node<T> curNode = node.getRightChild();
+        Node<T> parNode = node;
+
 
         while(true){
             parNode = curNode;
             curNode = curNode.getLeftChild();
             if (curNode.getRightChild() == null & curNode.getLeftChild() == null & curNode == parNode.getLeftChild() ){
+                node.setKey(curNode.getKey());
+                node.setValue(curNode.getValue());
                 parNode.setLeftChild(null);
-                node.setKey(parNode.getKey());
+
                 return true;
             }
         }
     }
 
-    public void printTree() { // метод для вывода дерева в консоль
-        Stack globalStack = new Stack(); // общий стек для значений дерева
-        globalStack.push(root);
-        int gaps = 32; // начальное значение расстояния между элементами
-        boolean isRowEmpty = false;
-        String separator = "-----------------------------------------------------------------";
-        System.out.println(separator);// черта для указания начала нового дерева
-        while (isRowEmpty == false) {
-            Stack localStack = new Stack(); // локальный стек для задания потомков элемента
-            isRowEmpty = true;
-
-            for (int j = 0; j < gaps; j++)
-                System.out.print(' ');
-            while (globalStack.isEmpty() == false) { // покуда в общем стеке есть элементы
-                Node temp = (Node) globalStack.pop(); // берем следующий, при этом удаляя его из стека
-                if (temp != null) {
-                    System.out.print(temp.getValue()); // выводим его значение в консоли
-                    localStack.push(temp.getLeftChild()); // соохраняем в локальный стек, наследники текущего элемента
-                    localStack.push(temp.getRightChild());
-                    if (temp.getLeftChild() != null ||
-                            temp.getRightChild() != null)
-                        isRowEmpty = false;
-                }
-                else {
-                    System.out.print("__");// - если элемент пустой
-                    localStack.push(null);
-                    localStack.push(null);
-                }
-                for (int j = 0; j < gaps * 2 - 2; j++)
-                    System.out.print(' ');
-            }
-            System.out.println();
-            gaps /= 2;// при переходе на следующий уровень расстояние между элементами каждый раз уменьшается
-            while (localStack.isEmpty() == false)
-                globalStack.push(localStack.pop()); // перемещаем все элементы из локального стека в глобальный
-        }
-        System.out.println(separator);// подводим черту
-    }
 }
+// TODO: 12/28/21 add methods "removeAll", "addAll", "toArray"

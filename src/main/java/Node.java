@@ -6,7 +6,7 @@ import lombok.Setter;
 public class Node<T> {
     private int  key;
     private T value;
-    private Node leftChild;
-    private Node rightChild;
+    private Node<T> leftChild;
+    private Node<T> rightChild;
 
 }
