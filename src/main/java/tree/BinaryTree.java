@@ -1,4 +1,9 @@
+package tree;
+
 import Interface.SimpleCollection;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,8 +11,8 @@ import java.util.Stack;
 
 public class BinaryTree<T> implements SimpleCollection<T> {
 
-
     private Node<T> root;
+    private final Logger log = LoggerFactory.getLogger(BinaryTree.class);
 
     public  BinaryTree(){
         root = null;
@@ -19,12 +24,13 @@ public class BinaryTree<T> implements SimpleCollection<T> {
     }
 
     @Override
+
     public boolean isEmpty() {
         if (root == null){
-            System.out.println("binary tree is empty");
+            log.info("binary tree is empty");
             return true;
         }else {
-            System.out.println("binary tree is not empty");
+            log.info("binary tree is not empty");
             return false;
         }
     }
@@ -41,11 +47,11 @@ public class BinaryTree<T> implements SimpleCollection<T> {
                 curNode = curNode.getLeftChild();
             }
             if (curNode == null){
-                System.out.printf("%s not in binary tree\n",o);
+                log.info(String.format("%s not in binary tree",o));
                 return false;
             }
             }
-        System.out.printf("%s is in binary tree\n",o);
+        log.info(String.format("%s is in binary tree",o));
         return true;
     }
 
@@ -89,30 +95,29 @@ public class BinaryTree<T> implements SimpleCollection<T> {
         newNode.setValue(value);
         if (curNode == null){
             root = newNode;
-            System.out.printf("%s now is root\n", newNode.getValue());
+            log.info(String.format("%s now is root", newNode.getValue()));
             return true;
         }else {
             while (true) {
                 if (newNode.getKey() < curNode.getKey()) {
                     if (curNode.getLeftChild() == null) {
                         curNode.setLeftChild(newNode);
-                        System.out.printf("%s added in %s\n", newNode.getValue(), curNode.getValue());
+                        log.info(getStringFormatForAdding("%s added in %s", newNode.getValue(), curNode.getValue()));
                         return true;
                     }else{
                         curNode = curNode.getLeftChild();
                     }
                 }
-
                     else if (newNode.getKey() > curNode.getKey()){
                         if(curNode.getRightChild() == null){
                             curNode.setRightChild(newNode);
-                            System.out.printf("%s added in %s\n",newNode.getValue(), curNode.getValue());
+                            log.info(getStringFormatForAdding("%s added in %s",newNode.getValue(), curNode.getValue()));
                             return true;
                         }else {
                             curNode = curNode.getRightChild();
                         }
                         }else if( newNode.getKey() == curNode.getKey()){
-                        System.out.printf("%s is already in %s\n",newNode,curNode.getValue());
+                        log.info(getStringFormatForAdding("%s is already in %s\n",newNode.getValue(),curNode.getValue()));
                         return false;
                 }
 
@@ -121,20 +126,20 @@ public class BinaryTree<T> implements SimpleCollection<T> {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(T value) {
 
-        int hashKey = o.hashCode();
+        int hashKey = value.hashCode();
         Node<T> curNode = root;
         Node<T> parNode = root;
 
         if (curNode == null){
-            System.out.println("Binary tree is empty\n");
+            log.info("binary tree is empty");
             return false;
         }
 
         else if(curNode.getKey() == hashKey){
             root = null;
-            System.out.printf("element %s is deleted\n", o);
+            log.info(getStringFormatForDeleting("element %s is deleted", value));
             return true;
         }
 
@@ -147,7 +152,7 @@ public class BinaryTree<T> implements SimpleCollection<T> {
                 curNode = curNode.getLeftChild();
             }
             if (curNode == null){
-                System.out.printf("%s not in tree\n", o);
+                log.info(getStringFormatForDeleting("%s not in tree", value));
                 return false;
             }
         }
@@ -156,31 +161,31 @@ public class BinaryTree<T> implements SimpleCollection<T> {
 
                 if (curNode == parNode.getLeftChild()) {
                     parNode.setLeftChild(null);
-                    System.out.printf("element %s is deleted\n", o);
+                    log.info(getStringFormatForDeleting("element %s is deleted\n", value));
                     return true;
                 } else if (curNode == parNode.getRightChild()) {
                     parNode.setRightChild(null);
-                    System.out.printf("element %s is deleted\n", o);
+                    log.info(getStringFormatForDeleting("element %s is deleted\n", value));
                     return true;
                 }
             }
              if (curNode.getLeftChild() == null & curNode.getRightChild() != null){
                  parNode.setRightChild(curNode.getRightChild());
-                 System.out.printf("element %s is deleted\n", o);
+                 log.info(getStringFormatForDeleting("element %s is deleted\n", value));
                  return true;
             }
              else if (curNode.getRightChild() == null & curNode.getLeftChild() != null){
                  parNode.setLeftChild(curNode.getLeftChild());
-                 System.out.printf("element %s is deleted\n", o);
+                 log.info(getStringFormatForDeleting("element %s is deleted\n", value));
                  return true;
              }
              if (curNode.getRightChild() != null & curNode.getLeftChild() != null){
-                 if (nodeChange(curNode)){
-                     System.out.printf("element %s is deleted\n", o);
+                 if (deletedNodeChangeToChild(curNode)){
+                     log.info(getStringFormatForDeleting("element %s is deleted\n", value));
                  }
                  else {
 
-                     System.out.printf("element %s is not deleted\n", o);
+                     log.info(getStringFormatForDeleting("element %s is not deleted\n", value));
                      return false;
                  }
              }
@@ -208,7 +213,7 @@ public class BinaryTree<T> implements SimpleCollection<T> {
         root = null;
     }
 
-    private boolean nodeChange(Node<T> node){
+    private boolean deletedNodeChangeToChild(Node<T> node){
         
         Node<T> curNode = node.getRightChild();
         Node<T> parNode = node;
@@ -227,4 +232,11 @@ public class BinaryTree<T> implements SimpleCollection<T> {
         }
     }
 
+    private String getStringFormatForAdding(String info,T addedValue, T parValue){
+        return String.format(info,addedValue,parValue);
+    }
+
+    private String getStringFormatForDeleting(String info,T deletedValue){
+        return String.format(info,deletedValue);
+    }
 }

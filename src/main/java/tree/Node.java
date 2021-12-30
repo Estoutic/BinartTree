@@ -1,3 +1,5 @@
+package tree;
+
 import lombok.Getter;
 import lombok.Setter;
 
