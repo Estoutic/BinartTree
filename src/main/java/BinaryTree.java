@@ -6,6 +6,7 @@ import java.util.Stack;
 
 public class BinaryTree<T> implements SimpleCollection<T> {
 
+
     private Node<T> root;
 
     public  BinaryTree(){
@@ -80,12 +81,12 @@ public class BinaryTree<T> implements SimpleCollection<T> {
     }
 
     @Override
-    public boolean add(T o) {
+    public boolean add(T value) {
         Node<T> curNode = root;
-        int hash_code = o.hashCode();
+        int hash_code = value.hashCode();
         Node<T> newNode = new Node<>();
         newNode.setKey(hash_code);
-        newNode.setValue(o);
+        newNode.setValue(value);
         if (curNode == null){
             root = newNode;
             System.out.printf("%s now is root\n", newNode.getValue());
@@ -174,7 +175,7 @@ public class BinaryTree<T> implements SimpleCollection<T> {
                  return true;
              }
              if (curNode.getRightChild() != null & curNode.getLeftChild() != null){
-                 if (getCurrentNode(curNode)){
+                 if (nodeChange(curNode)){
                      System.out.printf("element %s is deleted\n", o);
                  }
                  else {
@@ -207,8 +208,8 @@ public class BinaryTree<T> implements SimpleCollection<T> {
         root = null;
     }
 
-    private boolean getCurrentNode(Node<T> node){
-
+    private boolean nodeChange(Node<T> node){
+        
         Node<T> curNode = node.getRightChild();
         Node<T> parNode = node;
 
