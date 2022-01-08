@@ -21,4 +21,6 @@ public interface SimpleCollection<T> {
     void removeAll(Collection<T> c);
 
     void clear();
+
+    void balanceTree(T low, T high);
 }
